@@ -1,0 +1,40 @@
+mutation CreateDemoUser @auth(level: PUBLIC, insecureReason: "This mutation is for demo purposes and safe to expose to the public") {
+  user_insert(data: {
+    id: "550e8400-e29b-41d4-a716-446655440000",
+    displayName: "demouser1",
+    email: "demouser1@example.com",
+    createdAt: "2024-01-01T00:00:00Z"
+  })
+}
+
+query ListEnergyReadingsForHome($homeId: UUID!) @auth(level: USER) {
+  energyReadings(where: {homeId: {eq: $homeId}}) {
+    id
+    value
+    unit
+    timestamp
+  }
+}
+
+mutation CreateEnergyGoal($name: String!, $period: String!, $startDate: Date!, $targetValue: Float!, $description: String) @auth(level: USER) {
+  energyGoal_insert(data: {
+    name: $name,
+    period: $period,
+    startDate: $startDate,
+    targetValue: $targetValue,
+    description: $description,
+    homeId_expr: "uuidV4()",
+    userId_expr: "auth.uid",
+    createdAt_expr: "request.time"
+  })
+}
+
+query GetHomeForUser @auth(level: USER) {
+  homes(where: {userId: {eq_expr: "auth.uid"}}) {
+    id
+    name
+    address
+    latitude
+    longitude
+  }
+}

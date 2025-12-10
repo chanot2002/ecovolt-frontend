@@ -1,0 +1,41 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // 1. REAL-TIME DATA (Accessible ng lahat para makita ang RT data)
+    match /realtime_data/{document} {
+      allow read, write: if true;
+    }
+    
+    // 2. SENSOR LOGS (Historical Data)
+    // Walang authentication, para makasulat ang Arduino at makabasa/makabura ang Reports.jsx.
+    match /sensor_logs/{document} {
+      allow read, write: if true; 
+    }
+
+    // 3. AGROWASTE TRANSACTIONS
+    // Walang authentication.
+    match /agrowaste_transactions/{document} {
+      allow read, write: if true; 
+    }
+
+    // 4. SYSTEM SETTINGS
+    // Nangangailangan ng authentication.
+    match /system_settings/{document} {
+      allow read, write: if request.auth != null; // Naka-login lang ang pwedeng mag-basa/sulat
+    }
+
+    // 5. USER PROFILES
+    // Read: Naka-login lang. Write: Sariling profile lang.
+    match /users/{userId} {
+      allow read: if request.auth != null; 
+      allow write: if request.auth.uid == userId;
+    }
+    
+    // Default Rule: I-deny ang read/write sa lahat ng hindi tinukoy
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

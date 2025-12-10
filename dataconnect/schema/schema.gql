@@ -1,0 +1,49 @@
+type User @table {
+  displayName: String!
+  email: String!
+  createdAt: Timestamp!
+  photoUrl: String
+  preferredCurrency: String
+}
+
+type Home @table {
+  user: User
+  name: String!
+  address: String!
+  createdAt: Timestamp!
+  latitude: Float
+  longitude: Float
+  utilityProvider: String
+}
+
+type Device @table {
+  home: Home
+  name: String!
+  deviceType: String!
+  identifier: String!
+  createdAt: Timestamp!
+  manufacturer: String
+  model: String
+  locationInHome: String
+}
+
+type EnergyReading @table {
+  device: Device
+  home: Home
+  timestamp: Timestamp!
+  value: Float!
+  unit: String!
+  readingType: String
+}
+
+type EnergyGoal @table {
+  home: Home
+  user: User
+  name: String!
+  targetValue: Float!
+  period: String!
+  startDate: Date!
+  createdAt: Timestamp!
+  description: String
+  endDate: Date
+}
