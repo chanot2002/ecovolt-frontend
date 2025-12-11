@@ -99,7 +99,7 @@ const Layout = () => {
         </aside>
 
         {/* Main Content Area */}
-       <div className="flex-grow-1 d-flex flex-column" style={{ marginLeft: '280px' }}>
+       <div className="flex-grow-1 d-flex flex-column" style={{ marginLeft: '280px' }}> 
           {/* Top Navbar */}
           <header className="navbar navbar-dark bg-dark border-bottom border-secondary shadow-sm sticky-top">
             <div className="container-fluid">
