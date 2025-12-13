@@ -13,37 +13,36 @@ import Dashboard from './components/Dashboard';
 import Agrowaste from './components/Agrowaste';
 import Settings from './components/Settings';
 import Reports from './components/Reports';
-// ➡️ Import ng EFOAnalysis Component
 import EFOAnalysis from './components/EFOAnalysis'; 
 
 function App() {
-  return (
-    <Router>
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgot-password" element={<Login isForgotPassword={true} />} />
+  return (
+    <Router>
+      <Routes>
+        {/* Public Routes: Accessible kahit walang login */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<Login isForgotPassword={true} />} />
 
-        {/* Protected Routes (Require Auth) */}
-        <Route element={<ProtectedRoute />}>
-          <Route element={<Layout />}>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/agrowaste" element={<Agrowaste />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/reports" element={<Reports />} />
-            
-            {/* ➡️ Dito na ang iyong EFO Analysis Page */}
-            <Route path="/efo-analysis" element={<EFOAnalysis />} /> 
-            
-          </Route>
-        </Route>
+        {/* 🔑 Protected Routes (Kailangan ng Authentication) */}
+        {/* Ang ProtectedRoute ang magsasala. Kapag walang auth, ididirekta sa /login. */}
+        <Route element={<ProtectedRoute />}>
+          <Route element={<Layout />}>
+            {/* Ang path="/" ay ang Dashboard. Ito ang unang makikita kapag naka-login. */}
+            <Route path="/" element={<Dashboard />} /> 
+            <Route path="/agrowaste" element={<Agrowaste />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/reports" element={<Reports />} />
+            <Route path="/efo-analysis" element={<EFOAnalysis />} /> 
+          </Route>
+        </Route>
 
-        {/* Fallback/Home Redirect */}
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
-    </Router>
-  );
+        {/* ❗️ Catch-all/404 Route: Kapag nag-type ang user ng maling URL, ibabalik sila sa root path ("/"). 
+            Pagbalik sa "/", che-checkin ulit ng ProtectedRoute kung naka-login sila. */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </Router>
+  );
 }
 
 export default App;
